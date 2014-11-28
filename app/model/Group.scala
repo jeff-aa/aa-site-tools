@@ -19,6 +19,13 @@ object Group {
 
     Group(savedId, group.name, group.address, group.city)
   }
+
+  def getDistinctCities() : Seq[String] = {
+    DB.withConnection { implicit c =>
+      val query = SQL("select distinct city  from groups")
+      query().map(row => row[String]("city")).toList
+    }
+  }
 }
 
 case class Group(id: Option[Long], name: String, address: String, city: String);

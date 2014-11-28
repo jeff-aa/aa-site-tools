@@ -15,7 +15,8 @@ import org.joda.time.format.DateTimeFormat
 object Admin extends Controller  {
 
   def addMeetingPage = Action {
-    Ok(views.html.admin("derp"))
+    val cities = Group.getDistinctCities()
+    Ok(views.html.admin("derp", cities))
   }
 
 
@@ -50,7 +51,7 @@ object Admin extends Controller  {
       friday,
       saturday) = loginForm.bindFromRequest.get
 
-    val group = Group.save(Group(None, meetingName, city, address))
+    val group = Group.save(Group(None, meetingName, address, city))
 
     val daysOfWeek = 0 to 6
     val meetsOnDay : List[(Boolean, Int)] = List(sunday, monday, tuesday, wednesday, thursday, friday, saturday) map { _.getOrElse("false").toBoolean } zip daysOfWeek

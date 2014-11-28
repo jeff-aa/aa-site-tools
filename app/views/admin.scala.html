@@ -1,4 +1,4 @@
-@(userId: String)
+@(userId: String, cities: Seq[String])
 <head>
     <title>Add Meeting</title>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -14,7 +14,7 @@
     <script>
 $(function() {
 $( "#city" ).autocomplete({
-  source: [ "c++", "java", "php", "coldfusion", "javascript", "asp", "ruby" ]
+  source: [ @for(city <- cities) { "@city", } ]
 });
 })
 </script>
