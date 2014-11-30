@@ -1,0 +1,5 @@
+* Add flags for meetings (open/closed/gay/mens/womens)
+* Add "notes" ((Newport Harbor Lutheran Church, downstairs))
+* Support for varying times
+* Zip/postal code
+* Trim strings
