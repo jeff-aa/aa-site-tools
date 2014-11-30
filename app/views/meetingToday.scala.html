@@ -1,0 +1,48 @@
+@(groupName: String,
+  cityToMeetings: Map[String, Seq[model.Meeting]])
+
+<html>
+<head>
+    <title>
+        @groupName - Home
+    </title>
+    @headerIncludes()
+</head>
+<body>
+    @navbar("meetingsToday")
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                @for(city <- cityToMeetings.keys) {
+                    <a href="#@city">@city</a>
+                    <br>
+                }
+            </div>
+            <div class="col-md-8">
+                @for(city <- cityToMeetings.keys) {
+                    <a id="@city" />
+                    <h2>@city</h2>
+                    <table class="table">
+                    <tr>
+                        <th>Time</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Map</th>
+                    </tr>
+                    @for(meeting <- cityToMeetings.getOrElse(city, Seq()).sortBy(_.timeOfDay)) {
+                        <tr>
+                            <td>@meeting.timeOfDay</td>
+                            <td>@meeting.group.name</td>
+                            <td>@meeting.group.address</td>
+                            <td><a href="@meeting.getGoogleMapLink">map</a></td>
+                        </tr>
+                    }
+                    </table>
+
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

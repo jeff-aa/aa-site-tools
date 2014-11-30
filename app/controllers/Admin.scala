@@ -61,10 +61,10 @@ object Admin extends Controller  {
 
     val meetings : List[Meeting] = meetsOnDay
         .filter({ x: (Boolean, Int) => x._1 })
-        .map({ x: (Boolean, Int) => Meeting(None, group.id.get, x._2, time) })
+        .map({ x: (Boolean, Int) => Meeting(None, group, x._2, time) })
 
     meetings map { Meeting.save(_) }
 
-      Ok("derp")
+    Ok("derp")
   }
 }
