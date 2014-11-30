@@ -7,7 +7,7 @@ import play.api.data.Forms._
 import model._
 import play.api.Logger
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
 
 /**
  * Created by jwright on 2014-11-27.
@@ -18,6 +18,8 @@ object Admin extends Controller  {
     val cities = Group.getDistinctCities()
     Ok(views.html.admin("derp", cities))
   }
+
+
 
 
   def saveMeeting = Action { implicit request =>
