@@ -4,9 +4,12 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /meetingsToday              controllers.Application.meetingsToday
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Admin section
 GET     /admin/addMeeting           controllers.Admin.addMeetingPage()
 
 # API
