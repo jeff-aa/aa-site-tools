@@ -55,7 +55,7 @@ object Admin extends Controller  {
 
     val group = Group.save(Group(None, meetingName, address, city))
 
-    val daysOfWeek = 0 to 6
+    val daysOfWeek = 1 to 7
     val meetsOnDay : List[(Boolean, Int)] = List(sunday, monday, tuesday, wednesday, thursday, friday, saturday) map { _.getOrElse("false").toBoolean } zip daysOfWeek
 
     val formatter = DateTimeFormat.forPattern("hh:mm a")

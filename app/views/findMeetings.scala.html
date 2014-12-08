@@ -1,0 +1,51 @@
+@(groupName: String,
+  dayOfWeek: Int,
+  cities: Seq[String])
+
+<html>
+<head>
+    <title>
+        @groupName - Home
+    </title>
+    @headerIncludes()
+</head>
+<body>
+@navbar("findAMeeting")
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 cityList"></div>
+        <div class="col-md-8 meetingTable">
+            <h1>Find a meeting</h1>
+            <form action="/search" method="GET" clas="form-horizontal meeting-form" role="form">
+                <div class="form-group">
+                    <label for="dayOfWeek" class="col-sm-2 control-label">Day of Week</label>
+                    <select id="dayOfWeek" name="dayOfWeek" class="form-control">
+                        <option value="1" @if(dayOfWeek == 1) { selected } >Monday</option>
+                        <option value="2" @if(dayOfWeek == 2) { selected } >Tuesday</option>
+                        <option value="3" @if(dayOfWeek == 3) { selected } >Wednesday</option>
+                        <option value="4" @if(dayOfWeek == 4) { selected } >Thursday</option>
+                        <option value="5" @if(dayOfWeek == 5) { selected } >Friday</option>
+                        <option value="6" @if(dayOfWeek == 6) { selected } >Saturday</option>
+                        <option value="7" @if(dayOfWeek == 7) { selected } >Sunday</option>
+                        <option value="-1">Entire Week</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city" class="col-sm-2 control-label" class="form-control">City</label>
+                    <select id="city" name="city" class="form-control">
+                        <option value="_all">All cities</option>
+                        @for(city <- cities) {
+                            <option value="@city">@city</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Find meetings" class="btn btn-default">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

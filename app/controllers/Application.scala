@@ -4,27 +4,80 @@ import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
-import model.Meeting
+import model.{Group, Meeting}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
 object Application extends Controller {
 
-  private def getToday() : String = {
+  val groupName: String = "Scuzzum AA" // TODO(jeff): add to DB
+
+  private def getDateString(dayOfWeek: Option[Int]) : String = {
     val now = new DateTime()
-    val formatter = DateTimeFormat.forPattern("EEEE, MMMM d, yyyy")
-    formatter.print(now)
+    val fullFormatter = DateTimeFormat.forPattern("EEEE")
+
+    if(dayOfWeek.isDefined) {
+      fullFormatter.print(now.withDayOfWeek(dayOfWeek.get))
+    } else {
+      val weekStart = now.withDayOfWeek(1)
+      val weekEnd = now.withDayOfWeek(7)
+
+      val formatterStart = DateTimeFormat.forPattern("EEEE")
+      formatterStart.print(weekStart) + " to "  + fullFormatter.print(weekEnd)
+    }
   }
 
   def index = Action {
-    Ok(views.html.index("Scuzzum AA"))
+    Ok(views.html.index(groupName))
   }
 
   def meetingsToday = Action {
+    val now = new DateTime()
+    val dayOfWeek = now.dayOfWeek().get()
 
-    val meetings : List[Meeting] = Meeting.getMeetingsToday()
+    searchInternal(None, Some(dayOfWeek), true)
+  }
+
+  def findMeeting = Action {
+    val cities = Group.getDistinctCities()
+    Ok(views.html.findMeetings(groupName, (new DateTime()).dayOfWeek.get, cities))
+  }
+
+  case class SearchForm(dayOfWeek: Int, city: String) {
+    def getDayOfWeek() : Option[Int] = {
+      if(dayOfWeek == -1) {
+        None
+      } else {
+        Some(dayOfWeek)
+      }
+    }
+
+    def getCity() : Option[String] = {
+      if(city.equalsIgnoreCase("_all")) {
+        None
+      } else {
+        Some(city)
+      }
+    }
+  }
+
+  def search = Action { implicit request =>
+    val searchForm = Form(
+      mapping(
+        "dayOfWeek" -> number,
+        "city" -> text
+      )(SearchForm.apply)(SearchForm.unapply)
+    )
+
+    val search = searchForm.bindFromRequest().get
+
+    searchInternal(search.getCity(), search.getDayOfWeek(), false)
+  }
+
+  def searchInternal(city: Option[String], dayOfWeek: Option[Int], meetingToday: Boolean) : Result = {
+    val meetings : List[Meeting] = Meeting.getMeetings(city, dayOfWeek)
     val meetingsByCity = meetings.groupBy(_.group.city)
 
-    Ok(views.html.meetingToday.render("Spuzzum AA", getToday(), meetingsByCity))
+    Ok(views.html.meetingsView.render("Spuzzum AA", getDateString(dayOfWeek), None, meetingsByCity, meetingToday))
   }
 }
