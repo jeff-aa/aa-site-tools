@@ -35,7 +35,7 @@ object Application extends Controller {
     val now = new DateTime()
     val dayOfWeek = now.dayOfWeek().get()
 
-    searchInternal(None, Some(dayOfWeek), true)
+    searchInternal(None, Some(dayOfWeek), true, None, None, None)
   }
 
   def findMeeting = Action {
@@ -43,7 +43,7 @@ object Application extends Controller {
     Ok(views.html.findMeetings(groupName, (new DateTime()).dayOfWeek.get, cities))
   }
 
-  case class SearchForm(dayOfWeek: Int, city: String) {
+  case class SearchForm(dayOfWeek: Int, city: String, lgbt: Option[Boolean], closed: Option[Boolean], young: Option[Boolean]) {
     def getDayOfWeek() : Option[Int] = {
       if(dayOfWeek == -1) {
         None
@@ -65,17 +65,20 @@ object Application extends Controller {
     val searchForm = Form(
       mapping(
         "dayOfWeek" -> number,
-        "city" -> text
+        "city" -> text,
+        "lgbt" -> optional(boolean),
+        "closed" -> optional(boolean),
+        "young" -> optional(boolean)
       )(SearchForm.apply)(SearchForm.unapply)
     )
 
     val search = searchForm.bindFromRequest().get
 
-    searchInternal(search.getCity(), search.getDayOfWeek(), false)
+    searchInternal(search.getCity(), search.getDayOfWeek(), false, search.lgbt, search.closed, search.young)
   }
 
-  def searchInternal(city: Option[String], dayOfWeek: Option[Int], meetingToday: Boolean) : Result = {
-    val meetings : List[Meeting] = Meeting.getMeetings(city, dayOfWeek)
+  def searchInternal(city: Option[String], dayOfWeek: Option[Int], meetingToday: Boolean, lgbt: Option[Boolean], closed: Option[Boolean], young: Option[Boolean]) : Result = {
+    val meetings : List[Meeting] = Meeting.getMeetings(city, dayOfWeek, lgbt, closed, young)
     val meetingsByCity = meetings.groupBy(_.group.city)
 
     Ok(views.html.meetingsView.render("Spuzzum AA", getDateString(dayOfWeek), None, meetingsByCity, meetingToday))

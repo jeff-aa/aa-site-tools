@@ -19,7 +19,7 @@
             <h1>Find a meeting</h1>
             <form action="/search" method="GET" clas="form-horizontal meeting-form" role="form">
                 <div class="form-group">
-                    <label for="dayOfWeek" class="col-sm-2 control-label">Day of Week</label>
+                    <label for="dayOfWeek" class="col-sm-4 control-label">Day of Week</label>
                     <select id="dayOfWeek" name="dayOfWeek" class="form-control">
                         <option value="1" @if(dayOfWeek == 1) { selected } >Monday</option>
                         <option value="2" @if(dayOfWeek == 2) { selected } >Tuesday</option>
@@ -32,13 +32,25 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="city" class="col-sm-2 control-label" class="form-control">City</label>
+                    <label for="city" class="col-sm-4 control-label" class="form-control">City</label>
                     <select id="city" name="city" class="form-control">
                         <option value="_all">All cities</option>
                         @for(city <- cities) {
                             <option value="@city">@city</option>
                         }
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="lgbt" class="control-label">LGBT</label>
+                    <input type="checkbox" id="lgbt" name="lgbt" value="true">
+                </div>
+                <div class="form-group">
+                    <label for="closed" class="control-label">Closed</label>
+                    <input type="checkbox" id="closed" name="closed" value="true">
+                </div>
+                <div class="form-group">
+                    <label for="young" class="control-label">Young People</label>
+                    <input type="checkbox" id="young" name="young" value="true">
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Find meetings" class="btn btn-default">

@@ -37,7 +37,11 @@ object Admin extends Controller  {
         "WEDNESDAY" -> optional(text),
         "THURSDAY" -> optional(text),
         "FRIDAY" -> optional(text),
-        "SATURDAY" -> optional(text)
+        "SATURDAY" -> optional(text),
+        "lgbt" -> optional(boolean),
+        "closed" -> optional(boolean),
+        "young" -> optional(boolean),
+        "notes" -> optional(text)
       )
     )
 
@@ -51,9 +55,13 @@ object Admin extends Controller  {
       wednesday,
       thursday,
       friday,
-      saturday) = loginForm.bindFromRequest.get
+      saturday,
+      lgbt,
+      closed,
+      young,
+      notes) = loginForm.bindFromRequest.get
 
-    val group = Group.save(Group(None, meetingName, address, city))
+    val group = Group.save(Group(None, meetingName, address, city, lgbt.getOrElse(false), closed.getOrElse(false), young.getOrElse(false), notes.getOrElse("")))
 
     val daysOfWeek = 1 to 7
     val meetsOnDay : List[(Boolean, Int)] = List(sunday, monday, tuesday, wednesday, thursday, friday, saturday) map { _.getOrElse("false").toBoolean } zip daysOfWeek

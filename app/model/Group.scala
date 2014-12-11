@@ -12,12 +12,19 @@ import play.api.Play.current
 object Group {
   def save(group: Group) : Group = {
     val savedId : Option[Long] = DB.withConnection { implicit c =>
-      SQL("INSERT into GROUPS(NAME, ADDRESS, CITY) values({NAME}, {ADDRESS}, {CITY})")
-        .on("NAME" -> group.name, "ADDRESS" -> group.address, "CITY" -> group.city)
+      SQL("INSERT into GROUPS(NAME, ADDRESS, CITY, LGBT, CLOSED, YOUNG, NOTES) " +
+        " values({NAME}, {ADDRESS}, {CITY}, {LGBT}, {CLOSED}, {YOUNG}, {NOTES})")
+        .on("NAME" -> group.name,
+            "ADDRESS" -> group.address,
+            "CITY" -> group.city,
+            "LGBT" -> group.lgbt,
+            "CLOSED" -> group.closed,
+            "YOUNG" -> group.young,
+            "NOTES" -> group.notes)
         .executeInsert()
     }
 
-    Group(savedId, group.name, group.address, group.city)
+    Group(savedId, group.name, group.address, group.city, group.lgbt, group.closed, group.young, group.notes)
   }
 
   def getDistinctCities() : Seq[String] = {
@@ -28,4 +35,4 @@ object Group {
   }
 }
 
-case class Group(id: Option[Long], name: String, address: String, city: String);
+case class Group(id: Option[Long], name: String, address: String, city: String, lgbt: Boolean, closed: Boolean, young: Boolean, notes: String);

@@ -23,29 +23,26 @@ object Meeting {
   }
 
 
-  def getMeetings(city: Option[String], dayOfWeek: Option[Int]) : List[Meeting] = {
+  def getMeetings(city: Option[String],
+                  dayOfWeek: Option[Int],
+                  lgbt: Option[Boolean],
+                  closed: Option[Boolean],
+                  young: Option[Boolean]) : List[Meeting] = {
 
-    val cityConstraint = city match {
-      case None => None
-      case Some(city) =>
-        Some("GROUPS.city = {city}")
-    }
-
-    val dayOfWeekConstraint = dayOfWeek match {
-      case None => None
-      case Some(day) =>
-        Some("MEETING.DAY_OF_WEEK = {dayOfWeek}")
-    }
+    val cityConstraint = city map { x => "GROUPS.city = {city}" }
+    val dayOfWeekConstraint = dayOfWeek map { x => Some("MEETING.DAY_OF_WEEK = {dayOfWeek}") }
+    val closedConstraint = closed map { x => Some("GROUP.CLOSED = {closed}") }
+    val lgbtConstraint = lgbt map { x => Some("GROUP.LGBT = {lgbt}") }
+    val youngConstraint = young map { x => Some("GROUP.YOUNG = {young}") }
 
     val joinConstraint = Some("GROUPS.ID = MEETING.GROUP_ID")
 
-    val constraints : String = List(cityConstraint, dayOfWeekConstraint, joinConstraint).flatten.mkString(" AND ")
+    val constraints : String = List(joinConstraint, cityConstraint, dayOfWeekConstraint, closedConstraint, lgbtConstraint, youngConstraint).flatten.mkString(" AND ")
 
     DB.withConnection { implicit c =>
-      val query = SQL("""select GROUPS.ID, GROUPS.NAME, GROUPS.ADDRESS, GROUPS.CITY, MEETING.MEETING_ID, MEETING.DAY_OF_WEEK , MEETING.TIME_OF_DAY
+      val query = SQL("""select GROUPS.ID, GROUPS.NAME, GROUPS.ADDRESS, GROUPS.CITY, GROUPS.LGBT, GROUPS.CLOSED, GROUPS.YOUNG, GROUPS.NOTES, MEETING.MEETING_ID, MEETING.DAY_OF_WEEK , MEETING.TIME_OF_DAY
             from groups, meeting
               where """ + constraints)
-        .on("dayOfWeek" -> dayOfWeek)
 
       var completeQuery = if(city.isDefined) {
         query.on("city" -> city.get)
@@ -59,8 +56,34 @@ object Meeting {
         query
       }
 
+      completeQuery = if(lgbt.isDefined) {
+        query.on("lgbt" -> lgbt.get)
+      } else {
+        query
+      }
+
+      completeQuery = if(closed.isDefined) {
+        query.on("closed" -> closed.get)
+      } else {
+        query
+      }
+
+      completeQuery = if(young.isDefined) {
+        query.on("young" -> young.get)
+      } else {
+        query
+      }
+
       completeQuery().map { row =>
-        val group = Group(Some(row[Long]("GROUPS.ID")), row[String]("GROUPS.NAME"), row[String]("GROUPS.ADDRESS"), row[String]("GROUPS.CITY"))
+        val group = Group(Some(row[Long]("GROUPS.ID")),
+          row[String]("GROUPS.NAME"),
+          row[String]("GROUPS.ADDRESS"),
+          row[String]("GROUPS.CITY"),
+          row[Boolean]("GROUPS.LGBT"),
+          row[Boolean]("GROUPS.CLOSED"),
+          row[Boolean]("GROUPS.YOUNG"),
+          row[String]("GROUPS.NOTES"))
+
         Meeting(Some(row[Long]("MEETING.MEETING_ID")), group, row[Int]("MEETING.DAY_OF_WEEK"), row[Date]("MEETING.TIME_OF_DAY"))
       }.toList
     }
