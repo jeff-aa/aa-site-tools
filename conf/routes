@@ -4,6 +4,12 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /literature                           controllers.Application.literature
+GET     /contact                           controllers.Application.contact
+GET     /about                           controllers.Application.about
+
+
+
 GET     /meetingsToday              controllers.Application.meetingsToday
 GET     /findMeeting                controllers.Application.findMeeting
 GET     /search                     controllers.Application.search
@@ -12,8 +18,12 @@ GET     /search                     controllers.Application.search
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Admin section
+GET     /admin                      controllers.Admin.admin()
 GET     /admin/addMeeting           controllers.Admin.addMeetingPage()
-GET     /admin/meetingsDifferent           controllers.Admin.addMeetingPageDifferent()
+GET     /admin/meetingsDifferent    controllers.Admin.addMeetingPageDifferent()
+GET     /admin/edit/:id             controllers.Admin.editPage(id)
+POST     /admin/save/:id            controllers.Admin.savePage(id)
+
 
 # API
 

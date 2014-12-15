@@ -4,15 +4,30 @@
     @headerIncludes()
 </head>
 <body>
-    @if(saved) {
-        <div class="alert alert-success" role="alert">Page saved successfully.</div>
-    }
 
-    <form action="/admin/save/@id" method="POST">
-        <textarea name="content" id="content">@currentContent</textarea>
-        <button type="submit" class="btn btn-default">Save page</button>
-    </form>
-    <script>
-        CKEDITOR.replace( 'content' );
-    </script>
 </body>
+<body>
+@adminNavbar("fixme")
+<div class="container-fluid">
+    <div class="row">
+        @adminSidebar("siteSettings")
+        <div class="col-md-10 main">
+            @if(saved) {
+            <div class="alert alert-success" role="alert">Page saved successfully.</div>
+            }
+
+            <form action="/admin/save/@id" method="POST">
+                <textarea name="content" id="content">@currentContent</textarea>
+                <button type="submit" class="btn btn-default">Save page</button>
+            </form>
+
+            <script>
+                CKEDITOR.replace( 'content' );
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>$( "#@{id + "Tab"}" ).addClass( "active" );</script>
+</body>
+</html>

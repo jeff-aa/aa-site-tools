@@ -4,7 +4,7 @@ import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
-import model.{Group, Meeting}
+import model.{Page, Group, Meeting}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -27,9 +27,20 @@ object Application extends Controller {
     }
   }
 
-  def index = Action {
-    Ok(views.html.index(groupName))
+  def showPage(id: String, activeClass: String) = Action {
+    val page = Page.getPage(id)
+
+    if(page.isDefined) {
+      Ok(views.html.showPage("groupnamefixme", page.get.content, activeClass))
+    } else {
+      NotFound
+    }
   }
+
+  def index = showPage("homepage", "home")
+  def literature = showPage("literature", "literature")
+  def contact = showPage("contact", "contact")
+  def about = showPage("about", "about")
 
   def meetingsToday = Action {
     val now = new DateTime()

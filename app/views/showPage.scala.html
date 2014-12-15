@@ -1,0 +1,14 @@
+@(groupName: String, content: String, activeClass: String)
+
+<html>
+    <head>
+        <title>
+            @groupName - Home
+        </title>
+        @headerIncludes()
+    </head>
+    <body>
+    @navbar(activeClass)(groupName)
+    @Html(content)
+    </body>
+</html>

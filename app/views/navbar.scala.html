@@ -27,8 +27,8 @@
                             <li><a href="#">Integroup Committees</a></li>
                         </ul>
                     </li>
-                    <li><a href="/about">About AA</a></li>
-                    <li><a href="/contact">Contact Us</a></li>
+                    <li @if(activeId == "about") { class="active" }><a href="/about">About AA</a></li>
+                    <li @if(activeId == "contact") { class="active" }><a href="/contact">Contact Us</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
