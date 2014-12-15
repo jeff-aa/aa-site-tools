@@ -13,21 +13,41 @@
 </head>
 <body>
     @if(meetingToday) {
-        @navbar("meetingsToday")
+        @navbar("meetingsToday")(groupName)
     } else {
-        @navbar("findAMeeting")
+        @navbar("findAMeeting")(groupName)
     }
 
     <div class="container">
         <div class="row">
-            <div class="col-md-2 cityList">
-                @for(city <- cityToMeetings.keys.toList.sorted) {
-                    <strong><a href="#@city">@city</a></strong>
-                    <br>
-                }
+            <div class="col-md-2 sidebar-spacer">
+            </div>
+            <div class="col-md-10 day-header">
+                <h1>@date @if(citySelected.isDefined) { in @citySelected.get }</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 sidebar">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Legend</h3>
+                    </div>
+                    <div class="panel-body">
+                        <img src="/assets/images/y-icon.png" height="16" width="16"> Young People
+                        <br>
+                        <img src="/assets/images/closed.png" height="16" width="16"> Closed
+                        <br>
+                        <img src="assets/images/rainbow.png"height="16" width="16"> LGBT
+                    </div>
+                </div>
+                <div>
+                    @for(city <- cityToMeetings.keys.toList.sorted) {
+                        <strong><a href="#@city">@city</a></strong>
+                        <br>
+                    }
+                </div>
             </div>
             <div class="col-md-10 meetingTable">
-                <h1>@date @if(citySelected.isDefined) { in @citySelected.get }</h1>
                 @if(cityToMeetings.size == 0) {
                     <h2>No meetings found.</h2>
                 }

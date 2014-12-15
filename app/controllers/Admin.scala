@@ -1,6 +1,6 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Results, Action, Controller}
 import play.api.db._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -8,6 +8,8 @@ import model._
 import play.api.Logger
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
+import scala.util.Try
+import play.mvc.Http
 
 /**
  * Created by jwright on 2014-11-27.
@@ -22,6 +24,31 @@ object Admin extends Controller  {
   def addMeetingPageDifferent = Action {
     val cities = Group.getDistinctCities()
     Ok(views.html.differentTimes("derp", cities))
+  }
+
+  def editPage(id: String) = Action { request =>
+    val page = Page.getPage(id)
+
+    val savedString : String = request.getQueryString("saved").getOrElse("false")
+    val saved : Boolean = Try(savedString.toBoolean).getOrElse(false)
+
+    if(page.isDefined) {
+      Ok(views.html.edit(page.get.content, id, saved))
+    } else {
+      Ok(views.html.edit("Insert content here.", id, saved))
+    }
+  }
+
+  def savePage(id: String) = Action { implicit request =>
+    val savePage = Form(
+      "content" -> text
+    )
+
+    val (content) = savePage.bindFromRequest().get
+
+    Page.savePage(id, content)
+
+    Results.Redirect(routes.Admin.editPage(id).url, Map("saved" -> List("true")), Http.Status.MOVED_PERMANENTLY)
   }
 
   def saveMeeting = Action { implicit request =>
