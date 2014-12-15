@@ -6,6 +6,7 @@ import anorm._
 import play.api.Play.current
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import play.Logger
 
 /**
  * Created by jwright on 2014-11-28.
@@ -22,7 +23,6 @@ object Meeting {
     Meeting(savedId, meeting.group, meeting.dayOfWeek, meeting.timeOfDay)
   }
 
-
   def getMeetings(city: Option[String],
                   dayOfWeek: Option[Int],
                   lgbt: Option[Boolean],
@@ -30,51 +30,61 @@ object Meeting {
                   young: Option[Boolean]) : List[Meeting] = {
 
     val cityConstraint = city map { x => "GROUPS.city = {city}" }
-    val dayOfWeekConstraint = dayOfWeek map { x => Some("MEETING.DAY_OF_WEEK = {dayOfWeek}") }
-    val closedConstraint = closed map { x => Some("GROUP.CLOSED = {closed}") }
-    val lgbtConstraint = lgbt map { x => Some("GROUP.LGBT = {lgbt}") }
-    val youngConstraint = young map { x => Some("GROUP.YOUNG = {young}") }
+    val dayOfWeekConstraint = dayOfWeek map { x => "MEETING.DAY_OF_WEEK = {dayOfWeek}" }
+    val closedConstraint = closed map { x => "GROUP.CLOSED = {closed}" }
+    val lgbtConstraint = lgbt map { x => "GROUP.LGBT = {lgbt}" }
+    val youngConstraint = young map { x => "GROUP.YOUNG = {young}" }
 
     val joinConstraint = Some("GROUPS.ID = MEETING.GROUP_ID")
 
     val constraints : String = List(joinConstraint, cityConstraint, dayOfWeekConstraint, closedConstraint, lgbtConstraint, youngConstraint).flatten.mkString(" AND ")
 
+
+    val params = List(city map { value => NamedParameter("city", ParameterValue.toParameterValue(value))},
+      dayOfWeek map { value => NamedParameter("dayOfWeek", ParameterValue.toParameterValue(value))},
+      lgbt map { value => NamedParameter("lgbt", ParameterValue.toParameterValue(value))},
+      closed map { value => NamedParameter("closed", ParameterValue.toParameterValue(value))},
+      young map { value => NamedParameter("young", ParameterValue.toParameterValue(value))}
+    ).flatten
+
     DB.withConnection { implicit c =>
-      val query = SQL("""select GROUPS.ID, GROUPS.NAME, GROUPS.ADDRESS, GROUPS.CITY, GROUPS.LGBT, GROUPS.CLOSED, GROUPS.YOUNG, GROUPS.NOTES, MEETING.MEETING_ID, MEETING.DAY_OF_WEEK , MEETING.TIME_OF_DAY
+      var query : SimpleSql[Row] = SQL("""select GROUPS.ID, GROUPS.NAME, GROUPS.ADDRESS, GROUPS.CITY, GROUPS.LGBT, GROUPS.CLOSED, GROUPS.YOUNG, GROUPS.NOTES, MEETING.MEETING_ID, MEETING.DAY_OF_WEEK , MEETING.TIME_OF_DAY
             from groups, meeting
-              where """ + constraints)
+              where """ + constraints).on(params : _*)
 
-      var completeQuery = if(city.isDefined) {
-        query.on("city" -> city.get)
-      } else {
-        query
-      }
+//      query = if(cityConstraint.isDefined) {
+//      query = if(cityConstraint.isDefined) {
+//      query = if(cityConstraint.isDefined) {
+//        query.on("city" -> city.get)
+//      } else {
+//        query
+//      }
+//
+//      query = if(dayOfWeek.isDefined) {
+//        query.on("dayOfWeek" -> dayOfWeek.get)
+//      } else {
+//        query
+//      }
+//
+//      query = if(closed.isDefined) {
+//        query.on("closed" -> closed.get)
+//      } else {
+//        query
+//      }
+//
+//      query = if(lgbt.isDefined) {
+//        query.on("lgbt" -> lgbt.get)
+//      } else {
+//        query
+//      }
+//
+//      query = if(young.isDefined) {
+//        query.on("young" -> young.get)
+//      } else {
+//        query
+//      }
 
-      completeQuery = if(dayOfWeek.isDefined) {
-        query.on("dayOfWeek" -> dayOfWeek.get)
-      } else {
-        query
-      }
-
-      completeQuery = if(lgbt.isDefined) {
-        query.on("lgbt" -> lgbt.get)
-      } else {
-        query
-      }
-
-      completeQuery = if(closed.isDefined) {
-        query.on("closed" -> closed.get)
-      } else {
-        query
-      }
-
-      completeQuery = if(young.isDefined) {
-        query.on("young" -> young.get)
-      } else {
-        query
-      }
-
-      completeQuery().map { row =>
+      query().map { row =>
         val group = Group(Some(row[Long]("GROUPS.ID")),
           row[String]("GROUPS.NAME"),
           row[String]("GROUPS.ADDRESS"),
