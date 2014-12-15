@@ -31,9 +31,9 @@ object Meeting {
 
     val cityConstraint = city map { x => "GROUPS.city = {city}" }
     val dayOfWeekConstraint = dayOfWeek map { x => "MEETING.DAY_OF_WEEK = {dayOfWeek}" }
-    val closedConstraint = closed map { x => "GROUP.CLOSED = {closed}" }
-    val lgbtConstraint = lgbt map { x => "GROUP.LGBT = {lgbt}" }
-    val youngConstraint = young map { x => "GROUP.YOUNG = {young}" }
+    val closedConstraint = closed map { x => "GROUPS.CLOSED = {closed}" }
+    val lgbtConstraint = lgbt map { x => "GROUPS.LGBT = {lgbt}" }
+    val youngConstraint = young map { x => "GROUPS.YOUNG = {young}" }
 
     val joinConstraint = Some("GROUPS.ID = MEETING.GROUP_ID")
 
@@ -51,38 +51,6 @@ object Meeting {
       var query : SimpleSql[Row] = SQL("""select GROUPS.ID, GROUPS.NAME, GROUPS.ADDRESS, GROUPS.CITY, GROUPS.LGBT, GROUPS.CLOSED, GROUPS.YOUNG, GROUPS.NOTES, MEETING.MEETING_ID, MEETING.DAY_OF_WEEK , MEETING.TIME_OF_DAY
             from groups, meeting
               where """ + constraints).on(params : _*)
-
-//      query = if(cityConstraint.isDefined) {
-//      query = if(cityConstraint.isDefined) {
-//      query = if(cityConstraint.isDefined) {
-//        query.on("city" -> city.get)
-//      } else {
-//        query
-//      }
-//
-//      query = if(dayOfWeek.isDefined) {
-//        query.on("dayOfWeek" -> dayOfWeek.get)
-//      } else {
-//        query
-//      }
-//
-//      query = if(closed.isDefined) {
-//        query.on("closed" -> closed.get)
-//      } else {
-//        query
-//      }
-//
-//      query = if(lgbt.isDefined) {
-//        query.on("lgbt" -> lgbt.get)
-//      } else {
-//        query
-//      }
-//
-//      query = if(young.isDefined) {
-//        query.on("young" -> young.get)
-//      } else {
-//        query
-//      }
 
       query().map { row =>
         val group = Group(Some(row[Long]("GROUPS.ID")),

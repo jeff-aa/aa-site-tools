@@ -39,6 +39,25 @@ $( "#city" ).autocomplete({
         <textarea class="form-control" name="address" ></textarea>
     </div>
     <div class="form-group">
+        <label for="notes">Notes (displayed next to address: eg: no smoking, upstairs, etc)</label>
+        <input type="text" class="form-control" id="notes" name="notes">
+    </div>
+    <div class="checkbox-inline">
+        <label for="lgbt">
+            <input type="checkbox" id="lgbt" name="lgbt" value="true" >
+         LGBT </label>
+    </div>
+    <div class="checkbox-inline">
+        <label for="young">
+            <input type="checkbox" id="young" name="young" value="true" >
+        Young Persons</label >
+    </div>
+    <div class="checkbox-inline">
+        <label for="closed">
+            <input type="checkbox" id="closed" name="closed" value="true" >
+        Closed</label>
+    </div>
+    <div class="form-group">
         <label for="meeting-time">Time</label>
         <input type="text" id="meeting-time" data-format="h:mm a" data-template="hh : mm a" name="meeting-time" value="8:30 pm">
         <script>
@@ -50,45 +69,37 @@ $( "#city" ).autocomplete({
     <div class="checkbox">
         <label for="SUNDAY">
             <input type="checkbox" id="SUNDAY" name="SUNDAY" value="true" >
-            Sunday
-        </label>
+         Sunday</label>
     </div>
     <div class="checkbox">
         <label for="MONDAY">
             <input type="checkbox" id="MONDAY" name="MONDAY" value="true" >
-            Monday
-        </label>
+        Monday</label>
     </div>
     <div class="checkbox">
         <label for="TUESDAY">
             <input type="checkbox" id="TUESDAY" name="TUESDAY" value="true" >
-            Tuesday
-        </label>
+        Tuesday</label>
     </div>
     <div class="checkbox">
         <label for="WEDNESDAY">
             <input type="checkbox" id="WEDNESDAY" name="WEDNESDAY" value="true" >
-            Wednesday
-        </label>
-
+        Wednesday</label>
     </div>
     <div class="checkbox">
         <label for="THURSDAY">
             <input type="checkbox" id="THURSDAY" name="THURSDAY" value="true" >
-            Thursday
-        </label>
+            Thursday</label>
     </div>
     <div class="checkbox">
         <label for="FRIDAY">
             <input type="checkbox" id="FRIDAY" name="FRIDAY" value="true" >
-            Friday
-        </label>
+         Friday</label>
     </div>
     <div class="checkbox">
         <label for="SATURDAY">
             <input type="checkbox" id="SATURDAY" name="SATURDAY" value="true" >
-            Saturday
-        </label>
+         Saturday</label>
     </div>
     <button type="submit" class="btn btn-default">Add Meeting</button>
 </form>
