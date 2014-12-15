@@ -16,9 +16,13 @@ import play.mvc.Http
  */
 object Admin extends Controller  {
 
+  def admin = Action {
+    Ok(views.html.admin(SiteSettings("placeholder"), "testUser"))
+  }
+
   def addMeetingPage = Action {
     val cities = Group.getDistinctCities()
-    Ok(views.html.admin("derp", cities))
+    Ok(views.html.addMeeting("derp", cities))
   }
 
   def addMeetingPageDifferent = Action {
