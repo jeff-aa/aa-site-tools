@@ -13,6 +13,7 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Admin section
 GET     /admin/addMeeting           controllers.Admin.addMeetingPage()
+GET     /admin/meetingsDifferent           controllers.Admin.addMeetingPageDifferent()
 
 # API
 
