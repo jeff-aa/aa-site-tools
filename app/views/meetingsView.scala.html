@@ -40,6 +40,7 @@
                         <th>Time</th>
                         <th>Name</th>
                         <th>Address</th>
+                        <th>Codes</th>
                         <th>Map</th>
                     </tr>
                     @for(meeting <- cityToMeetings.getOrElse(city, Seq()).sortBy({meeting : model.Meeting => (meeting.dayOfWeek, meeting.timeOfDay)})) {
@@ -48,6 +49,10 @@
                             <td  style="white-space: nowrap">@meeting.getTimePretty</td>
                             <td>@meeting.group.name</td>
                             <td>@meeting.group.address</td>
+                            <td>@if(meeting.group.closed) { <img src="assets/images/closed.png" height="16" width="16" alt="Closed"> }
+                                @if(meeting.group.lgbt) { <img src="assets/images/rainbow.png" height="16" width="16" alt="LGBT"> }
+                                @if(meeting.group.young) { <img src="assets/images/y-icon.png" height="16" width="16" alt="Young Persons"> }
+                            </td>
                             <td><a href="@meeting.getGoogleMapLink" target="_blank"><img src="/assets/images/map.png"></a></td>
                         </tr>
                     }

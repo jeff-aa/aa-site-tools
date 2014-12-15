@@ -19,8 +19,10 @@ object Admin extends Controller  {
     Ok(views.html.admin("derp", cities))
   }
 
-
-
+  def addMeetingPageDifferent = Action {
+    val cities = Group.getDistinctCities()
+    Ok(views.html.differentTimes("derp", cities))
+  }
 
   def saveMeeting = Action { implicit request =>
     Logger.error(request.body.toString)
