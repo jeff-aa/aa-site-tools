@@ -9,6 +9,10 @@
     </head>
     <body>
     @navbar(activeClass)(groupName)
-    @Html(content)
+    <div class="row">
+        <div class="col-lg-10 col-sm-offset-1">
+            @Html(content)
+        </div>
+    </div>
     </body>
 </html>

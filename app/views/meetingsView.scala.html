@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-2 sidebar">
+            <div class="col-md-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Legend</h3>
@@ -40,11 +40,14 @@
                         <img src="assets/images/rainbow.png"height="16" width="16"> LGBT
                     </div>
                 </div>
-                <div>
-                    @for(city <- cityToMeetings.keys.toList.sorted) {
-                        <strong><a href="#@city">@city</a></strong>
-                        <br>
-                    }
+                <br>
+                <div class="sidebar">
+                    <div>
+                        @for(city <- cityToMeetings.keys.toList.sorted) {
+                            <strong><a href="#@city">@city</a></strong>
+                            <br>
+                        }
+                    </div>
                 </div>
             </div>
             <div class="col-md-10 meetingTable">
